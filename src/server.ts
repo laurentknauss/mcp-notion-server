@@ -28,19 +28,10 @@ export function getServer(): McpServer {
     "Search for pages and databases in Notion",
     {
       query: z.string().optional().describe("Search query text"),
-      format: z.enum(["json", "markdown"]).default("markdown").describe("Response format"),
     },
-    async ({ query, format }): Promise<CallToolResult> => {
+    async ({ query }): Promise<CallToolResult> => {
       try {
         const response = await notionClient.search(query);
-
-        if (format === "markdown") {
-          const markdown = await notionClient.toMarkdown(response);
-          return {
-            content: [{ type: "text", text: markdown }],
-          };
-        }
-
         return {
           content: [{ type: "text", text: JSON.stringify(response, null, 2) }],
         };
@@ -56,19 +47,10 @@ export function getServer(): McpServer {
     "Retrieve a page from Notion",
     {
       page_id: z.string().describe("The ID of the page to retrieve"),
-      format: z.enum(["json", "markdown"]).default("markdown").describe("Response format"),
     },
-    async ({ page_id, format }): Promise<CallToolResult> => {
+    async ({ page_id }): Promise<CallToolResult> => {
       try {
         const response = await notionClient.retrievePage(page_id);
-
-        if (format === "markdown") {
-          const markdown = await notionClient.toMarkdown(response);
-          return {
-            content: [{ type: "text", text: markdown }],
-          };
-        }
-
         return {
           content: [{ type: "text", text: JSON.stringify(response, null, 2) }],
         };
@@ -86,19 +68,10 @@ export function getServer(): McpServer {
     "Retrieve the children of a block",
     {
       block_id: z.string().describe("The ID of the block"),
-      format: z.enum(["json", "markdown"]).default("markdown").describe("Response format"),
     },
-    async ({ block_id, format }): Promise<CallToolResult> => {
+    async ({ block_id }): Promise<CallToolResult> => {
       try {
         const response = await notionClient.retrieveBlockChildren(block_id);
-
-        if (format === "markdown") {
-          const markdown = await notionClient.toMarkdown(response);
-          return {
-            content: [{ type: "text", text: markdown }],
-          };
-        }
-
         return {
           content: [{ type: "text", text: JSON.stringify(response, null, 2) }],
         };
@@ -116,19 +89,10 @@ export function getServer(): McpServer {
     "Query a Notion database",
     {
       database_id: z.string().describe("The ID of the database to query"),
-      format: z.enum(["json", "markdown"]).default("markdown").describe("Response format"),
     },
-    async ({ database_id, format }): Promise<CallToolResult> => {
+    async ({ database_id }): Promise<CallToolResult> => {
       try {
         const response = await notionClient.queryDatabase(database_id);
-
-        if (format === "markdown") {
-          const markdown = await notionClient.toMarkdown(response);
-          return {
-            content: [{ type: "text", text: markdown }],
-          };
-        }
-
         return {
           content: [{ type: "text", text: JSON.stringify(response, null, 2) }],
         };
@@ -146,19 +110,10 @@ export function getServer(): McpServer {
     "Retrieve a database from Notion",
     {
       database_id: z.string().describe("The ID of the database to retrieve"),
-      format: z.enum(["json", "markdown"]).default("markdown").describe("Response format"),
     },
-    async ({ database_id, format }): Promise<CallToolResult> => {
+    async ({ database_id }): Promise<CallToolResult> => {
       try {
         const response = await notionClient.retrieveDatabase(database_id);
-
-        if (format === "markdown") {
-          const markdown = await notionClient.toMarkdown(response);
-          return {
-            content: [{ type: "text", text: markdown }],
-          };
-        }
-
         return {
           content: [{ type: "text", text: JSON.stringify(response, null, 2) }],
         };
@@ -177,19 +132,10 @@ export function getServer(): McpServer {
     {
       block_id: z.string().describe("The ID of the parent block"),
       children: z.array(z.any()).describe("Array of block objects to append"),
-      format: z.enum(["json", "markdown"]).default("markdown").describe("Response format"),
     },
-    async ({ block_id, children, format }): Promise<CallToolResult> => {
+    async ({ block_id, children }): Promise<CallToolResult> => {
       try {
         const response = await notionClient.appendBlockChildren(block_id, children);
-
-        if (format === "markdown") {
-          const markdown = await notionClient.toMarkdown(response);
-          return {
-            content: [{ type: "text", text: markdown }],
-          };
-        }
-
         return {
           content: [{ type: "text", text: JSON.stringify(response, null, 2) }],
         };
@@ -208,19 +154,10 @@ export function getServer(): McpServer {
     {
       database_id: z.string().describe("The ID of the database"),
       properties: z.any().describe("Properties of the new database item"),
-      format: z.enum(["json", "markdown"]).default("markdown").describe("Response format"),
     },
-    async ({ database_id, properties, format }): Promise<CallToolResult> => {
+    async ({ database_id, properties }): Promise<CallToolResult> => {
       try {
         const response = await notionClient.createDatabaseItem(database_id, properties);
-
-        if (format === "markdown") {
-          const markdown = await notionClient.toMarkdown(response);
-          return {
-            content: [{ type: "text", text: markdown }],
-          };
-        }
-
         return {
           content: [{ type: "text", text: JSON.stringify(response, null, 2) }],
         };
@@ -239,19 +176,10 @@ export function getServer(): McpServer {
     {
       page_id: z.string().describe("The ID of the page to update"),
       properties: z.any().describe("Properties to update"),
-      format: z.enum(["json", "markdown"]).default("markdown").describe("Response format"),
     },
-    async ({ page_id, properties, format }): Promise<CallToolResult> => {
+    async ({ page_id, properties }): Promise<CallToolResult> => {
       try {
         const response = await notionClient.updatePageProperties(page_id, properties);
-
-        if (format === "markdown") {
-          const markdown = await notionClient.toMarkdown(response);
-          return {
-            content: [{ type: "text", text: markdown }],
-          };
-        }
-
         return {
           content: [{ type: "text", text: JSON.stringify(response, null, 2) }],
         };
@@ -269,19 +197,10 @@ export function getServer(): McpServer {
     "Delete a block in Notion",
     {
       block_id: z.string().describe("The ID of the block to delete"),
-      format: z.enum(["json", "markdown"]).default("markdown").describe("Response format"),
     },
-    async ({ block_id, format }): Promise<CallToolResult> => {
+    async ({ block_id }): Promise<CallToolResult> => {
       try {
         const response = await notionClient.deleteBlock(block_id);
-
-        if (format === "markdown") {
-          const markdown = await notionClient.toMarkdown(response);
-          return {
-            content: [{ type: "text", text: markdown }],
-          };
-        }
-
         return {
           content: [{ type: "text", text: JSON.stringify(response, null, 2) }],
         };

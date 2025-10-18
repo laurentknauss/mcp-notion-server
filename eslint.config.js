@@ -34,6 +34,6 @@ export default [
     },
   },
   {
-    ignores: ['build/**', 'node_modules/**', '*.js', '*.mjs'],
+    ignores: ['build/**', 'node_modules/**', '*.js', '*.mjs', 'src/index-stdio-backup.ts'],
   },
 ];

@@ -1,10 +1,7 @@
 /**
  * Notion API client wrapper
  */
-
-import { convertToMarkdown } from "../markdown/index.js";
 import {
-  NotionResponse,
   BlockResponse,
   PageResponse,
   DatabaseResponse,
@@ -31,18 +28,15 @@ export class NotionClientWrapper {
 
   async appendBlockChildren(
     block_id: string,
-    children: Partial<BlockResponse>[]
+    children: Partial<BlockResponse>[],
   ): Promise<BlockResponse> {
     const body = { children };
 
-    const response = await fetch(
-      `${this.baseUrl}/blocks/${block_id}/children`,
-      {
-        method: "PATCH",
-        headers: this.headers,
-        body: JSON.stringify(body),
-      }
-    );
+    const response = await fetch(`${this.baseUrl}/blocks/${block_id}/children`, {
+      method: "PATCH",
+      headers: this.headers,
+      body: JSON.stringify(body),
+    });
 
     return response.json();
   }
@@ -59,19 +53,16 @@ export class NotionClientWrapper {
   async retrieveBlockChildren(
     block_id: string,
     start_cursor?: string,
-    page_size?: number
+    page_size?: number,
   ): Promise<ListResponse> {
     const params = new URLSearchParams();
     if (start_cursor) params.append("start_cursor", start_cursor);
     if (page_size) params.append("page_size", page_size.toString());
 
-    const response = await fetch(
-      `${this.baseUrl}/blocks/${block_id}/children?${params}`,
-      {
-        method: "GET",
-        headers: this.headers,
-      }
-    );
+    const response = await fetch(`${this.baseUrl}/blocks/${block_id}/children?${params}`, {
+      method: "GET",
+      headers: this.headers,
+    });
 
     return response.json();
   }
@@ -85,10 +76,7 @@ export class NotionClientWrapper {
     return response.json();
   }
 
-  async updateBlock(
-    block_id: string,
-    block: Partial<BlockResponse>
-  ): Promise<BlockResponse> {
+  async updateBlock(block_id: string, block: Partial<BlockResponse>): Promise<BlockResponse> {
     const response = await fetch(`${this.baseUrl}/blocks/${block_id}`, {
       method: "PATCH",
       headers: this.headers,
@@ -109,7 +97,7 @@ export class NotionClientWrapper {
 
   async updatePageProperties(
     page_id: string,
-    properties: Record<string, any>
+    properties: Record<string, any>,
   ): Promise<PageResponse> {
     const body = { properties };
 
@@ -122,10 +110,7 @@ export class NotionClientWrapper {
     return response.json();
   }
 
-  async listAllUsers(
-    start_cursor?: string,
-    page_size?: number
-  ): Promise<ListResponse> {
+  async listAllUsers(start_cursor?: string, page_size?: number): Promise<ListResponse> {
     const params = new URLSearchParams();
     if (start_cursor) params.append("start_cursor", start_cursor);
     if (page_size) params.append("page_size", page_size.toString());
@@ -156,7 +141,7 @@ export class NotionClientWrapper {
   async createDatabase(
     parent: CreateDatabaseArgs["parent"],
     properties: Record<string, any>,
-    title?: RichTextItemResponse[]
+    title?: RichTextItemResponse[],
   ): Promise<DatabaseResponse> {
     const body = { parent, title, properties };
 
@@ -178,7 +163,7 @@ export class NotionClientWrapper {
       direction: "ascending" | "descending";
     }>,
     start_cursor?: string,
-    page_size?: number
+    page_size?: number,
   ): Promise<ListResponse> {
     const body: Record<string, any> = {};
     if (filter) body.filter = filter;
@@ -186,14 +171,11 @@ export class NotionClientWrapper {
     if (start_cursor) body.start_cursor = start_cursor;
     if (page_size) body.page_size = page_size;
 
-    const response = await fetch(
-      `${this.baseUrl}/databases/${database_id}/query`,
-      {
-        method: "POST",
-        headers: this.headers,
-        body: JSON.stringify(body),
-      }
-    );
+    const response = await fetch(`${this.baseUrl}/databases/${database_id}/query`, {
+      method: "POST",
+      headers: this.headers,
+      body: JSON.stringify(body),
+    });
 
     return response.json();
   }
@@ -211,7 +193,7 @@ export class NotionClientWrapper {
     database_id: string,
     title?: RichTextItemResponse[],
     description?: RichTextItemResponse[],
-    properties?: Record<string, any>
+    properties?: Record<string, any>,
   ): Promise<DatabaseResponse> {
     const body: Record<string, any> = {};
     if (title) body.title = title;
@@ -229,7 +211,7 @@ export class NotionClientWrapper {
 
   async createDatabaseItem(
     database_id: string,
-    properties: Record<string, any>
+    properties: Record<string, any>,
   ): Promise<PageResponse> {
     const body = {
       parent: { database_id },
@@ -248,7 +230,7 @@ export class NotionClientWrapper {
   async createComment(
     parent?: { page_id: string },
     discussion_id?: string,
-    rich_text?: RichTextItemResponse[]
+    rich_text?: RichTextItemResponse[],
   ): Promise<CommentResponse> {
     const body: Record<string, any> = { rich_text };
     if (parent) {
@@ -270,20 +252,17 @@ export class NotionClientWrapper {
   async retrieveComments(
     block_id: string,
     start_cursor?: string,
-    page_size?: number
+    page_size?: number,
   ): Promise<ListResponse> {
     const params = new URLSearchParams();
     params.append("block_id", block_id);
     if (start_cursor) params.append("start_cursor", start_cursor);
     if (page_size) params.append("page_size", page_size.toString());
 
-    const response = await fetch(
-      `${this.baseUrl}/comments?${params.toString()}`,
-      {
-        method: "GET",
-        headers: this.headers,
-      }
-    );
+    const response = await fetch(`${this.baseUrl}/comments?${params.toString()}`, {
+      method: "GET",
+      headers: this.headers,
+    });
 
     return response.json();
   }
@@ -296,7 +275,7 @@ export class NotionClientWrapper {
       timestamp: "last_edited_time";
     },
     start_cursor?: string,
-    page_size?: number
+    page_size?: number,
   ): Promise<ListResponse> {
     const body: Record<string, any> = {};
     if (query) body.query = query;
@@ -312,9 +291,5 @@ export class NotionClientWrapper {
     });
 
     return response.json();
-  }
-
-  async toMarkdown(response: NotionResponse): Promise<string> {
-    return convertToMarkdown(response);
   }
 }
