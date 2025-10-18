@@ -1,7 +1,7 @@
 /**
  * Notion API client wrapper
  */
-import {
+import type {
   BlockResponse,
   PageResponse,
   DatabaseResponse,

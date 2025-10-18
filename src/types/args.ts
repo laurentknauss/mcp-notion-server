@@ -2,7 +2,7 @@
  * Type definitions for tool arguments
  */
 
-import { RichTextItemResponse, BlockResponse } from "./responses.js";
+import type { RichTextItemResponse, BlockResponse } from "./responses.js";
 
 // Blocks
 export interface AppendBlockChildrenArgs {

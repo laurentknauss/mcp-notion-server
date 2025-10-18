@@ -2,7 +2,7 @@
  * Schema definitions for Notion API tools
  */
 
-import { Tool } from "@modelcontextprotocol/sdk/types.js";
+import type { Tool } from "@modelcontextprotocol/sdk/types.js";
 import {
   commonIdDescription,
   formatParameter,
@@ -109,8 +109,7 @@ export const updateBlockTool: Tool = {
       },
       block: {
         type: "object",
-        description:
-          "The updated content for the block. Must match the block's type schema.",
+        description: "The updated content for the block. Must match the block's type schema.",
       },
       format: formatParameter,
     },
@@ -143,9 +142,7 @@ export const updatePagePropertiesTool: Tool = {
     properties: {
       page_id: {
         type: "string",
-        description:
-          "The ID of the page or database item to update." +
-          commonIdDescription,
+        description: "The ID of the page or database item to update." + commonIdDescription,
       },
       properties: {
         type: "object",
@@ -198,8 +195,7 @@ export const retrieveUserTool: Tool = {
 
 export const retrieveBotUserTool: Tool = {
   name: "notion_retrieve_bot_user",
-  description:
-    "Retrieve the bot user associated with the current token in Notion",
+  description: "Retrieve the bot user associated with the current token in Notion",
   inputSchema: {
     type: "object",
     properties: {
@@ -226,8 +222,7 @@ export const createDatabaseTool: Tool = {
       },
       title: {
         type: "array",
-        description:
-          "Title of database as it appears in Notion. An array of rich text objects.",
+        description: "Title of database as it appears in Notion. An array of rich text objects.",
         items: richTextObjectSchema,
       },
       properties: {
@@ -293,8 +288,7 @@ export const retrieveDatabaseTool: Tool = {
     properties: {
       database_id: {
         type: "string",
-        description:
-          "The ID of the database to retrieve." + commonIdDescription,
+        description: "The ID of the database to retrieve." + commonIdDescription,
       },
       format: formatParameter,
     },
@@ -343,13 +337,11 @@ export const createDatabaseItemTool: Tool = {
     properties: {
       database_id: {
         type: "string",
-        description:
-          "The ID of the database to add the item to." + commonIdDescription,
+        description: "The ID of the database to add the item to." + commonIdDescription,
       },
       properties: {
         type: "object",
-        description:
-          "Properties of the new database item. These should match the database schema.",
+        description: "Properties of the new database item. These should match the database schema.",
       },
       format: formatParameter,
     },
@@ -372,21 +364,18 @@ export const createCommentTool: Tool = {
         properties: {
           page_id: {
             type: "string",
-            description:
-              "The ID of the page to comment on." + commonIdDescription,
+            description: "The ID of the page to comment on." + commonIdDescription,
           },
         },
       },
       discussion_id: {
         type: "string",
         description:
-          "The ID of an existing discussion thread to add a comment to." +
-          commonIdDescription,
+          "The ID of an existing discussion thread to add a comment to." + commonIdDescription,
       },
       rich_text: {
         type: "array",
-        description:
-          "Array of rich text objects representing the comment content.",
+        description: "Array of rich text objects representing the comment content.",
         items: richTextObjectSchema,
       },
       format: formatParameter,
@@ -405,13 +394,11 @@ export const retrieveCommentsTool: Tool = {
       block_id: {
         type: "string",
         description:
-          "The ID of the block or page whose comments you want to retrieve." +
-          commonIdDescription,
+          "The ID of the block or page whose comments you want to retrieve." + commonIdDescription,
       },
       start_cursor: {
         type: "string",
-        description:
-          "If supplied, returns a page of results starting after the cursor.",
+        description: "If supplied, returns a page of results starting after the cursor.",
       },
       page_size: {
         type: "number",
