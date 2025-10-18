@@ -14,21 +14,50 @@
     "Readme.md"
   ],
   "scripts": {
-    "build": "tsc && node -e \"require('fs').chmodSync('build/index.js', '755')\"",
-    "prepare": "npm run build",
+    "build": "tsc",
+    "build:http": "tsc --build tsconfig.http.json",
+    "start": "node build/index.js",
+    "start:http": "node build/index-http.js",
+    "dev": "tsx watch src/index.ts",
+    "dev:http": "tsx watch src/index-http.ts",
+    "prepare": "husky",
     "watch": "tsc --watch",
     "inspector": "npx @modelcontextprotocol/inspector build/index.js",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "lint": "eslint src --ext .ts,.tsx",
+    "lint:fix": "eslint src --ext .ts,.tsx --fix",
+    "format": "prettier --write \"src/**/*.{ts,tsx,json,md}\""
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.7.0",
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "express": "^5.1.0",
     "vitest": "3.0.9",
-    "yargs": "^17.7.2"
+    "yargs": "^17.7.2",
+    "zod": "^3.25.51"
   },
   "devDependencies": {
+    "@eslint/js": "^9.38.0",
+    "@types/express": "^5.0.3",
     "@types/node": "^20.11.24",
     "@types/yargs": "^17.0.33",
+    "@typescript-eslint/eslint-plugin": "^8.46.1",
+    "@typescript-eslint/parser": "^8.46.1",
+    "eslint": "^9.38.0",
+    "globals": "^16.4.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.4",
+    "prettier": "^3.6.2",
+    "tsx": "^4.19.4",
     "typescript": "^5.3.3"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yaml,yml}": [
+      "prettier --write"
+    ]
   }
 }

@@ -1,4 +1,69 @@
+# Dependencies
 node_modules/
+.pnpm-store/
+
+# Build outputs
 build/
+dist/
+*.tsbuildinfo
+
+# Environment files
+.env
+.env.local
+.env.production
+.env.development
+.env.test
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+logs/
 *.log
-.env*
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+lerna-debug.log*
+
+# Testing
+coverage/
+.nyc_output/
+*.lcov
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# TypeScript cache
+*.tscache
+.tsbuildinfo
+
+# ESLint cache
+.eslintcache
+
+# Prettier cache
+.prettiercache
+
+# Backup files from refactoring
+src/index-stdio-backup.ts
+src/server/index-backup.ts
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Package manager lock files (using pnpm)
+package-lock.json
+yarn.lock
+
+# Notion API token file (if stored locally)
+.notion-token
+
+# Vitest
+*.timestamp-*

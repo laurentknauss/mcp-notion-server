@@ -1,52 +1,78 @@
-#!/usr/bin/env node
-/**
- * All API endpoints support both JSON and Markdown response formats.
- * Set the "format" parameter to "json" or "markdown" (default is "markdown").
- * - Use "markdown" for human-readable output when only reading content
- * - Use "json" when you need to process or modify the data programmatically
- *
- * Command-line Arguments:
- * --enabledTools: Comma-separated list of tools to enable (e.g. "notion_retrieve_page,notion_query_database")
- *
- * Environment Variables:
- * - NOTION_API_TOKEN: Required. Your Notion API integration token.
- * - NOTION_MARKDOWN_CONVERSION: Optional. Set to "true" to enable
- *   experimental Markdown conversion. If not set or set to any other value,
- *   all responses will be in JSON format regardless of the "format" parameter.
- */
-import yargs from "yargs";
-import { hideBin } from "yargs/helpers";
-import { startServer } from "./server/index.js";
+import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
+import express, { type Request, type Response } from "express";
 
-// Parse command line arguments
-const argv = yargs(hideBin(process.argv))
-  .option("enabledTools", {
-    type: "string",
-    description: "Comma-separated list of tools to enable",
-  })
-  .parseSync();
+import { getServer } from "./server.js";
+import { config } from "./config.js";
 
-const enabledToolsSet = new Set(
-  argv.enabledTools ? argv.enabledTools.split(",") : []
-);
+const app = express();
+app.use(express.json());
 
-// if test environment, do not execute main()
-if (process.env.NODE_ENV !== "test" && process.env.VITEST !== "true") {
-  main().catch((error) => {
-    console.error("Fatal error in main():", error);
-    process.exit(1);
-  });
-}
+app.post("/mcp", async (req: Request, res: Response) => {
+  try {
+    const transport = new StreamableHTTPServerTransport({
+      sessionIdGenerator: undefined,
+    });
 
-async function main() {
-  const notionToken = process.env.NOTION_API_TOKEN;
-  const enableMarkdownConversion =
-    process.env.NOTION_MARKDOWN_CONVERSION === "true";
+    res.on("close", () => {
+      transport.close();
+    });
 
-  if (!notionToken) {
-    console.error("Please set NOTION_API_TOKEN environment variable");
+    const server = getServer();
+    await server.connect(transport);
+
+    await transport.handleRequest(req, res, req.body);
+  } catch (error) {
+    console.error("Error handling MCP request:", error);
+    if (!res.headersSent) {
+      res.status(500).json({
+        jsonrpc: "2.0",
+        error: {
+          code: -32603,
+          message: "Internal server error",
+        },
+        id: null,
+      });
+    }
+  }
+});
+
+app.get("/mcp", async (req: Request, res: Response) => {
+  console.log("Received GET MCP request");
+  res.writeHead(405).end(
+    JSON.stringify({
+      jsonrpc: "2.0",
+      error: {
+        code: -32000,
+        message: "Method not allowed.",
+      },
+      id: null,
+    }),
+  );
+});
+
+app.delete("/mcp", async (req: Request, res: Response) => {
+  console.log("Received DELETE MCP request");
+  res.writeHead(405).end(
+    JSON.stringify({
+      jsonrpc: "2.0",
+      error: {
+        code: -32000,
+        message: "Method not allowed.",
+      },
+      id: null,
+    }),
+  );
+});
+
+app.listen(config.MCP_HTTP_PORT, (error?: Error) => {
+  if (error) {
+    console.error("Failed to start server:", error);
     process.exit(1);
   }
+  console.log(`Notion MCP Streamable HTTP Server listening on port ${config.MCP_HTTP_PORT}`);
+});
 
-  await startServer(notionToken, enabledToolsSet, enableMarkdownConversion);
-}
+process.on("SIGINT", async () => {
+  console.log("Server shutdown complete");
+  process.exit(0);
+});
