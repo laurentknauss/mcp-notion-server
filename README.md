@@ -2,7 +2,7 @@
 
 A Model Context Protocol (MCP) server that provides access to Notion's API through streamable HTTP transport, enabling remote deployment on cloud platforms.
 
-**Built with the [Alpic.ai Node.js MCP Template](https://alpic.ai)** for streamable HTTP transport and cloud deployment.
+**Built with the [Alpic.ai Node.js MCP Template](https://github.com/alpic-ai/mcp-server-template-nodejs)** for streamable HTTP transport and cloud deployment.
 
 ## Remote Deployment
 
